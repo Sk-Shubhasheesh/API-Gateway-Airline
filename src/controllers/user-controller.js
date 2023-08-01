@@ -4,6 +4,8 @@ const { UserService } = require('../services');
 const { SuccessResponce, ErrorResponce } = require('../utils/common');
 
 
+
+
 /**
  * POST : /signup 
  * req-body {email: 'a@b.com', password: '1234'}
@@ -14,6 +16,7 @@ async function signup(req, res) {
             email: req.body.email,
             password: req.body.password
         });
+      
         SuccessResponce.data = user;
         return res
                 .status(StatusCodes.CREATED)
