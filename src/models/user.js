@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
   User.beforeCreate(function encrypt(user) { // this user is javascript object before creation mysql record in the table 
 
     const encryptedPassword = bcrypt.hashSync(user.password, +ServerConfig.SALT_ROUNDS);
-    // user.password = encryptedPassword;
+    user.password = encryptedPassword;
     
 
   });
