@@ -2,6 +2,7 @@ const { StatusCodes } = require('http-status-codes');
 const { UserService} = require('../services')
 const { ErrorResponce } = require('../utils/common');
 const AppError = require('../utils/errors/app-error');
+const { message } = require('../utils/common/error-response');
 
 function validateAuthRequest(req, res, next){
     if(!req.body.email){
@@ -27,7 +28,7 @@ async function checkAuth(req, res, next){
     try {
         const response = await UserService.isAuthenticated(req.headers['x-access-token']);
         if(response){
-            req.user = response; // setting user id in the eeq object
+            req.user = response; // setting user id in the req object
             next();
         }
     } catch (error) {
@@ -39,7 +40,18 @@ async function checkAuth(req, res, next){
 
 }
 
+async function isAdmin(req, res, next){
+    const response = await UserService.isAdmin(req.user);
+    if(!response){
+        return res
+                 .status(StatusCodes.UNAUTHORIZED)
+                 .json({message: 'User not authorized for this action'}); 
+    }
+    next();
+}
+
 module.exports = {
     validateAuthRequest,
-    checkAuth
+    checkAuth,
+    isAdmin
 }
